@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500;700&family=Kranky&family=Mulish:wght@400;600;700&display=swap" rel="stylesheet">
+
+</head>
+<body>
+
+    <main id="app">
+        <header>
+            <img src="assets/icons/logo.svg" class="logo" alt="Logo">
+            <div class="search-bar">
+                <form action="#">
+                    <label for="search"><img src="assets/icons/search.svg" alt="Search"></label>
+                    <input type="text" name="search" placeholder="Search here">
+                </form>
+            </div>
+        </header>
+
+        <div class="menu">
+            <nav>
+                <ul>
+                    <li><a href="#">Category</a></li>
+                    <li><a href="#">Seasonal</a></li>
+                    <li><a href="#">About</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="container">
+            <p class="container__description"> {{ fruits[index].description }} </p>
+            <div class="container__picture">
+                <img :src="fruits[index].image" :alt="fruits[index].name" :style="{ width: fruits[index].size['width'], height: fruits[index].size['height'], top: fruits[index].position['top'], left: fruits[index].position['left'] }">
+            </div>
+            
+            
+            <div class="container__infos">
+                <div class="container__infos__item">
+                    <div class="container__infos__item__title">
+                        <div class="line" :style="{ width: fruits[index].lineWidth + 'px', left: - fruits[index].lineWidth  - 10 + 'px' }"></div>
+                        <h2>Health benefits</h2>
+                    </div>
+                    <p> {{ fruits[index].healthBenefits }} </p>
+                </div>
+                <div class="container__infos__item">
+                    <div class="container__infos__item__title">
+                        <!-- <div class="corner" :style="(fruits[index].corner['direction'] == 'up') ? '{ width: \'200px\' }' : '{ width: \'10px\' }'"></div> -->
+                        <div class="corner" :style="(fruits[index].corner['direction'] == 'up') ? { 
+                            width: fruits[index].corner['width'] + 'px',
+                            left: - fruits[index].corner['width'] - 10 + 'px',
+                            height: fruits[index].corner['height'] + 'px',
+                            top: '12px',
+                            transform: 'scaleY(-1)',
+                            transformOrigin: 'top right',
+                        } : {
+                            width: fruits[index].corner['width'] + 'px',
+                            left: - fruits[index].corner['width'] - 10 + 'px',
+                            height: fruits[index].corner['height'] + 'px',
+                          }"></div>
+                        <h2>Nutritional Values</h2>
+                    </div>
+                    <ul>
+                        <li v-for="(data, label) in fruits[index].nutritionalValues"> {{ label + ' ' + data }} </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <ul class="social-network">
+            <li><a href="#"><img src="assets/icons/facebook.svg" alt="Facebook"></a></li>
+            <li><a href="#"><img src="assets/icons/twitter.svg" alt="Twitter"></a></li>
+            <li><a href="#"><img src="assets/icons/instagram.svg" alt="Instagram"></a></li>
+        </ul>
+
+        <nav class="footer-menu">
+            <button v-if="index > 0" v-on="index > 0 ? { click : () => { index-- } } : {}"><img src="assets/icons/left_arrow.svg" alt="Previous"></button>
+            
+            <div class="footer-menu__container">
+                <div v-for="(fruit, i) in fruits" :class="index == i ? 'active footer-menu__container__item' : 'footer-menu__container__item'" @click="index = i">
+                    <div v-if="i > index - 2 && i < index + 2 || index == 0 && i < index + 3 || index == fruits.length - 1 && i > index - 3" class="footer-menu__container__item__content">
+                        <img :src="fruit.image" :alt="fruit.name">
+                        <p>{{ fruit.name }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <button v-if="index < fruits.length -1" v-on="index < fruits.length - 1 ? { click : () => { index++ } } : {}"><img src="assets/icons/left_arrow.svg" alt="Next" class="footer-menu__right-arrow"></button>
+        </nav>
+    </main>
+
+    <script src="https://unpkg.com/vue@3"></script>
+
+<script>
+  const { createApp } = Vue
+
+  createApp({
+    data() {
+      return {
+        index: 0,
+        fruits: [{
+                name: 'Pineapple',
+                image: 'assets/images/pineapple.png',
+                description: 'The pineapple is a tropical plant with an edible fruit, also called a pineapple, and the most economically significant plant in the family Bromeliaceae.',
+                healthBenefits: 'Pineapple contains a significant amount of vitamin C, a water-soluble antioxidant that fights cell damage.',
+                nutritionalValues: { 
+                    calories: '74',
+                    sugars: '13.7g',
+                    carbohydrate : '19.5g'
+                },
+                position: {
+                    top: '-230px',
+                    left: 0,
+                },
+                size: {
+                    width: 'auto',
+                    height: '700px',
+                },
+                lineWidth: 160,
+                corner: {
+                    direction: 'down',
+                    width: 130,
+                    height: 50,
+                }
+            }, {
+                name: 'Green Apple',
+                image: 'assets/images/green-apple.png',
+                description: 'The Granny Smith, also known as a green apple or sour apple, is an apple cultivar which originated in Australia in 1868. It is named after Maria Ann Smith, who propagated the cultivar from a chance seedling. The tree is thought to be a hybrid of Malus sylvestris, the European wild apple, with the domesticated apple Malus domestica as the polleniser.',
+                healthBenefits: 'The fibre in green apples makes it slower for them to be digested, which keeps you feeling full for a longer time.',
+                nutritionalValues: { 
+                    calories: '60',
+                    sugars: '14.1g',
+                    carbohydrate : '20.5g'
+                },
+                position: {
+                    top: '-50px',
+                    left: '-50px',
+                },
+                size: {
+                    width: 'auto',
+                    height: '450px',
+                },
+                lineWidth: 100,
+                corner: {
+                    direction: 'up',
+                    width: 275,
+                    height: 75,
+                }
+            }, {
+                name: 'Quince',
+                image: 'assets/images/quince.png',
+                description: 'The quince is the sole member of the genus Cydonia in the family Rosaceae (which also contains apples and pears, among other fruits). It is a deciduous tree that bears hard, aromatic bright golden-yellow pome fruit, similar in appearance to a pear. Ripe quince fruits are hard and tart and seldom eaten raw, but are processed into marmalade, jam, paste (known as quince cheese) or alcoholic beverages.',
+                healthBenefits: 'Quinces contain fiber and several essential vitamins and minerals, making them a nutritious addition to almost any diet.',
+                nutritionalValues: { 
+                    calories: '61',
+                    sugars: '15.2g',
+                    carbohydrate : '21.5g'
+                },
+                position: {
+                    top: '-50px',
+                    left: '-50px',
+                },
+                size: {
+                    width: 'auto',
+                    height: '350px',
+                },
+                lineWidth: 180,
+                corner: {
+                    direction: 'up',
+                    width: 425,
+                    height: 100,
+                }
+            }, {
+                name: 'Pear',
+                image: 'assets/images/pear.png',
+                description: 'The pear, (genus Pyrus), genus of some 20–45 trees and shrubs in the rose family (Rosaceae), including the common pear (Pyrus communis). One of the most important fruit trees in the world, the common pear is cultivated in all temperate-zone countries of both hemispheres. The fruit is commonly eaten fresh or is canned. It is also used to produce perry, an alcoholic beverage. Several species, such as the Callery pear (P. calleryana), are grown as ornamentals.',
+                healthBenefits: 'In addition to being a good source of fiber, pears are also high in vitamins C and K, as well as potassium and antioxidants.',
+                nutritionalValues: { 
+                    calories: '62',
+                    sugars: '16.3g',
+                    carbohydrate : '22.5g'
+                },
+                position: {
+                    top: '-50px',
+                    left: '-30px',
+                },
+                size: {
+                    width: 'auto',
+                    height: '450px',
+                },
+                lineWidth: 200,
+                corner: {
+                    direction: 'up',
+                    width: 220,
+                    height: 30,
+                }
+        }],
+        }
+    },
+    mounted() {
+
+    }
+  }).mount('#app')
+</script>
+
+</body>
+</html>
